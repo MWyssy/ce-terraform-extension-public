@@ -13,7 +13,7 @@ module "alb" {
     module.vpc.public_subnets[1],
     module.vpc.public_subnets[2]
   ]
-  security_groups = [module.vpc.default_security_group_id]
+  security_groups = [module.alb.security_group_id]
 
   target_groups = [
     {
@@ -25,17 +25,7 @@ module "alb" {
         protocol = "HTTP"
         path     = "/health-check"
       }
-      targets = {
-        public_1 = {
-          target_id = module.ec2_instance[0].id
-        }
-        public_2 = {
-          target_id = module.ec2_instance[1].id
-        }
-        public_3 = {
-          target_id = module.ec2_instance[2].id
-        }
-      }
+
     }
   ]
 
@@ -93,4 +83,13 @@ resource "aws_security_group_rule" "lb-ingress-22" {
   to_port           = 22
   protocol          = "tcp"
   cidr_blocks       = ["84.232.135.193/32"]
+}
+
+resource "aws_security_group_rule" "lb-egress-ip4" {
+  security_group_id = module.alb.security_group_id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
 }

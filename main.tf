@@ -25,49 +25,72 @@ module "vpc" {
 
   enable_nat_gateway = true
 
+  public_dedicated_network_acl = true
+  manage_default_network_acl   = true
+  public_inbound_acl_rules = [
+    {
+      rule_number = 200
+      rule_action = "allow"
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      cidr_block  = "0.0.0.0/0"
+    },
+    {
+      rule_number     = 201
+      rule_action     = "allow"
+      protocol        = "-1"
+      from_port       = 0
+      to_port         = 0
+      ipv6_cidr_block = "::/0"
+    }
+  ]
+
 }
 
-resource "aws_security_group_rule" "ingress-3000-ip4" {
-  security_group_id = module.vpc.default_security_group_id
-  type              = "ingress"
-  from_port         = 3000
-  to_port           = 3000
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
 
-resource "aws_security_group_rule" "ingress-3000-ip6" {
-  security_group_id = module.vpc.default_security_group_id
-  type              = "ingress"
-  from_port         = 3000
-  to_port           = 3000
-  protocol          = "tcp"
-  ipv6_cidr_blocks  = ["::/0"]
-}
 
-resource "aws_security_group_rule" "ingress-80-ip4" {
-  security_group_id = module.vpc.default_security_group_id
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
+# resource "aws_security_group_rule" "ingress-3000-ip4" {
+#   security_group_id = module.vpc.default_security_group_id
+#   type              = "ingress"
+#   from_port         = 3000
+#   to_port           = 3000
+#   protocol          = "tcp"
+#   cidr_blocks       = ["0.0.0.0/0"]
+# }
 
-resource "aws_security_group_rule" "ingress-80-ip6" {
-  security_group_id = module.vpc.default_security_group_id
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  ipv6_cidr_blocks  = ["::/0"]
-}
+# resource "aws_security_group_rule" "ingress-3000-ip6" {
+#   security_group_id = module.vpc.default_security_group_id
+#   type              = "ingress"
+#   from_port         = 3000
+#   to_port           = 3000
+#   protocol          = "tcp"
+#   ipv6_cidr_blocks  = ["::/0"]
+# }
 
-resource "aws_security_group_rule" "ingress-22" {
-  security_group_id = module.vpc.default_security_group_id
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks       = ["84.232.135.193/32"]
-}
+# resource "aws_security_group_rule" "ingress-80-ip4" {
+#   security_group_id = module.vpc.default_security_group_id
+#   type              = "ingress"
+#   from_port         = 80
+#   to_port           = 80
+#   protocol          = "tcp"
+#   cidr_blocks       = ["0.0.0.0/0"]
+# }
+
+# resource "aws_security_group_rule" "ingress-80-ip6" {
+#   security_group_id = module.vpc.default_security_group_id
+#   type              = "ingress"
+#   from_port         = 80
+#   to_port           = 80
+#   protocol          = "tcp"
+#   ipv6_cidr_blocks  = ["::/0"]
+# }
+
+# resource "aws_security_group_rule" "ingress-22" {
+#   security_group_id = module.vpc.default_security_group_id
+#   type              = "ingress"
+#   from_port         = 22
+#   to_port           = 22
+#   protocol          = "tcp"
+#   cidr_blocks       = ["84.232.135.193/32"]
+# }
